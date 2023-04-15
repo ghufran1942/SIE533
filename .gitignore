@@ -1,1 +1,5 @@
 data/content.csv
+data/correlations.csv
+data/sample_submission.csv
+data/topics.csv
+data/filtered_df.csv
