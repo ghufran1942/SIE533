@@ -7,3 +7,23 @@ data/content_filtered.csv
 project
 downloads/Anaconda3-2023.03-Linux-x86_64.sh
 downloads
+data/desktop.ini
+data/content_filtered_es.csv
+data/content_filtered_fr.csv
+data/corr_content.csv
+data/corr_topics.csv
+data/correlation_filtered_fr.csv
+data/correlation_filtered.csv
+data/topics_filtered_es.csv
+data/topics_filtered_fr.csv
+Siamese Model/cleaned_output.csv
+Siamese Model/cleaned_submission.csv
+Siamese Model/content_final_split.csv
+Siamese Model/content_final.csv
+Siamese Model/joined.csv
+Siamese Model/submission.csv
+Siamese Model/.ipynb_checkpoints/cleaned_output-checkpoint.csv
+Siamese Model/.ipynb_checkpoints/cleaned_submission-checkpoint.csv
+Siamese Model/.ipynb_checkpoints/content_final_split-checkpoint.csv
+Siamese Model/.ipynb_checkpoints/content_final-checkpoint.csv
+Siamese Model/.ipynb_checkpoints/submission-checkpoint.csv

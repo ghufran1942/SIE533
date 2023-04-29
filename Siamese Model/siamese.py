@@ -1,4 +1,3 @@
-# %%
 #### Import necessary packages/functions
 import pandas as pd
 import numpy as np
@@ -13,8 +12,6 @@ import random
 import itertools
 import csv
 
-
-# %%
 PATH = "../data/"
 
 #### Reading in the data.
@@ -23,9 +20,6 @@ correlations = pd.read_csv(f"{PATH}correlations.csv")
 #sample_submission = pd.read_csv("/kaggle/input/learning-equality-curriculum-recommendations/sample_submission.csv")
 topics = pd.read_csv(f"{PATH}topics_filtered.csv")
 
-
-
-# %%
 #### Create combine function
 def combine(correlations, topics, content):
     '''
@@ -69,46 +63,14 @@ def combine(correlations, topics, content):
 
     return corr_topics, corr_content, index_to_topic, index_to_content
 
-# %%
 #### Apply combine() to our data
 corr_topics, corr_content, index_to_topic, index_to_content = combine(correlations, topics, content)
 
-# %%
 #### Create a stopword removal function to remove stopwords for each language
 import nltk
 nltk.download('stopwords')
 # Dictionary of languages found in our data
-lang_dict = {
-    "en":"english",
-    "es":"spanish",
-    "it":"italian",
-    'pt':"portuguese",
-    'mr':'marathi',
-    'bg':'bulgarian',
-    'gu':'gujarati',
-    'sw':'swahili',
-    'hi':'hindi',
-    'ar':'arabic',
-    'bn':'bengali',
-    'as':'assamese',
-    'zh':'chinese',
-    'fr':'french',
-    'km':'khmer',
-    'pl':'polish',
-    'ta':'tamil',
-    'or':'oriya',
-    'ru':'russian',
-    'kn':'kannada',
-    'swa':'swahili',
-    'my':'burmese',
-    'pnb':'punjabi',
-    'fil':'filipino',
-    'tr':'turkish',
-    'te':'telugu',
-    'ur':'urdu',
-    'fi':'finnish',
-    'pn':'unknown',
-    'mu':'unknown'}
+lang_dict = {"en":"english"}
 
 # List of languages supported by the natural language tool kit (NLTK) module.
 supported_languages = stopwords.fileids()
@@ -123,12 +85,10 @@ def remove_stopwords(text):
             text = text.replace(' ' + word + ' ', ' ')
     return text
 
-# %%
 #### Apply remove_stopwords() to our data
 corr_topics["features"] = corr_topics.features.apply(remove_stopwords)
 corr_content["features"] = corr_content.features.apply(remove_stopwords)
 
-# %%
 #### Create train/test indices for our data 
 random.seed(10)
 train_indices = random.sample(range(len(corr_content)), round(0.8*len(corr_content))) #80/20 train/test split
@@ -147,7 +107,6 @@ train_content_full = corr_content.iloc[train_indices[(half+20):(full)], :]
 train_topics = pd.concat([train_topics_half, train_topics_full]).reset_index().drop("index", axis=1)
 train_content = pd.concat([train_content_half, train_content_full]).reset_index().drop("index", axis=1)
 
-# %%
 #### Repeat for test data
 test_topics = corr_topics.drop(train_indices, axis=0)
 test_content = corr_content.drop(train_indices, axis=0)
@@ -164,12 +123,10 @@ test_content_full = test_content.iloc[(half+5):full, :]
 test_topics = pd.concat([test_topics_half, test_topics_full]).reset_index().drop("index", axis=1)
 test_content = pd.concat([test_content_half, test_content_full]).reset_index().drop("index", axis=1)
 
-# %%
 #### Create labels
 train_labels = np.array((train_topics.id == train_content.id).astype(int))
 test_labels = np.array((test_topics.id == test_content.id).astype(int))
 
-# %%
 #### Convert data to tensors
 train_topics = tf.data.Dataset.from_tensor_slices(tf.cast(train_topics.features, tf.string))
 train_content = tf.data.Dataset.from_tensor_slices(tf.cast(train_content.features, tf.string))
@@ -179,7 +136,6 @@ test_topics = tf.data.Dataset.from_tensor_slices(tf.cast(test_topics.features, t
 test_content = tf.data.Dataset.from_tensor_slices(tf.cast(test_content.features, tf.string))
 test_labels = tf.data.Dataset.from_tensor_slices(tf.cast(test_labels, tf.int32))
 
-# %%
 #### Combine data into TensorFlow Datasets
 #### Perfectly shuffle, batch, cache, and prefetch our new datasets
 train_ds = tf.data.Dataset.zip(
@@ -194,7 +150,6 @@ test_ds = tf.data.Dataset.zip(
 
 test_ds = test_ds.shuffle(buffer_size = test_ds.cardinality().numpy()).batch(batch_size = 64).cache().prefetch(tf.data.experimental.AUTOTUNE)
 
-# %%
 #### Create Text Vectorization Layer
 # Hyperparameters
 VOCAB_SIZE = 1000000
@@ -219,11 +174,9 @@ vectorize_layer = TextVectorization(
     output_sequence_length = MAX_LEN
 )
 
-# %%
 #### Adapt text vectorization layer to our data
 vectorize_layer.adapt(pd.concat([corr_topics["features"], corr_content["features"]]))
 
-# %%
 inp_topics = Input((1, ), dtype=tf.string)
 inp_content = Input((1, ), dtype=tf.string)
 
@@ -250,18 +203,14 @@ model = Model(inputs=[inp_topics, inp_content], outputs=output)
 
 model.summary()
 
-# %%
 model.compile(loss='binary_crossentropy',
               optimizer='adam',
               metrics=tf.keras.metrics.AUC())
 
-# %%
 model.fit(train_ds, epochs=5, verbose=1)
 
-# %%
 model.evaluate(test_ds, verbose=1)
 
-# %%
 #### Antijoin topics with correlations data, since we don't have to predict those topics
 outer_joined = topics.merge(correlations, how='outer', left_on='id', right_on='topic_id', indicator=True)
 topics = outer_joined[(outer_joined._merge == 'left_only')].drop('_merge', axis=1)
@@ -285,13 +234,10 @@ del content
 index_to_content = pd.Series(content_ids, index=content_index).to_dict()
 index_to_topic = pd.Series(topics_ids, index=topics_index).to_dict()
 
-# %%
 #### Remove stopwords
 topics_features = topics_features.apply(remove_stopwords)
 content_features = content_features.apply(remove_stopwords)
 
-# %%
-#### Write predictions to output_file
 THRESHOLD = 0.99994
 
 output_file = "submission.csv"
