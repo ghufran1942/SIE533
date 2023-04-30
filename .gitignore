@@ -27,3 +27,28 @@ Siamese Model/.ipynb_checkpoints/cleaned_submission-checkpoint.csv
 Siamese Model/.ipynb_checkpoints/content_final_split-checkpoint.csv
 Siamese Model/.ipynb_checkpoints/content_final-checkpoint.csv
 Siamese Model/.ipynb_checkpoints/submission-checkpoint.csv
+data/Old/content_filtered_es.csv
+data/Old/content_filtered_fr.csv
+data/Old/content_filtered.csv
+data/Old/corr_content.csv
+data/Old/corr_topics.csv
+data/Old/correlation_filtered_fr.csv
+data/Old/correlation_filtered.csv
+data/Old/desktop.ini
+data/Old/sample_submission.csv
+data/Old/topics_filtered_es.csv
+data/Old/topics_filtered_fr.csv
+data/Old/topics_filtered.csv
+old/submission.csv
+old/Siamese Model/cleaned_output.csv
+old/Siamese Model/cleaned_submission.csv
+old/Siamese Model/content_final_split.csv
+old/Siamese Model/content_final.csv
+old/Siamese Model/joined.csv
+submission.csv
+data/sample_submission.csv
+old/Siamese Model/.ipynb_checkpoints/cleaned_output-checkpoint.csv
+old/Siamese Model/.ipynb_checkpoints/cleaned_submission-checkpoint.csv
+old/Siamese Model/.ipynb_checkpoints/content_final_split-checkpoint.csv
+old/Siamese Model/.ipynb_checkpoints/content_final-checkpoint.csv
+old/Siamese Model/.ipynb_checkpoints/submission-checkpoint.csv
